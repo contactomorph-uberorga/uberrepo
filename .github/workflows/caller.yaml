@@ -17,6 +17,7 @@ jobs:
         echo "Repository: " ${{ github.repository }}
         echo "Ref: " ${{ github.ref }}
         echo "Ref name: " ${{ github.ref_name }}
+        echo "Modified"
     - name: Forbid master
       shell: python
       run: |
