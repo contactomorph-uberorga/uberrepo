@@ -1,0 +1,40 @@
+name: Raw string Caller
+on:
+  workflow_dispatch:
+    inputs:
+      target-ref:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  logs:
+    name: Main
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+    - name: log all
+      run: |
+        echo "Repository: " ${{ github.repository }}
+        echo "Ref: " ${{ github.ref }}
+        echo "Ref name: " ${{ github.ref_name }}
+    - name: Enforce master
+      shell: python
+      run: |
+        current_ref = "${{ github.ref_name }}"
+        if current_ref != "master":
+          raise ValueError("Only master branch is allowed")
+        target_ref = "${{ inputs.target-ref }}"
+        if target_ref == "master":
+          raise ValueError("Invalid master branch used as target-ref")
+
+  call:
+    name: Call callee
+    needs: logs
+    uses: contactomorph-uberorga/uberrepo/.github/workflows/callee.yaml@master
+    with:
+      called-ref: master
+      target-ref: ${{ inputs.target-ref }}

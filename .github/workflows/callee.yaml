@@ -1,0 +1,31 @@
+name: Callee
+on:
+  workflow_call:
+    inputs:
+      target-ref:
+        required: true
+        type: string
+      called-ref:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  main:
+    name: Main
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - name: log all
+        run: |
+          echo "Repository: " ${{ github.repository }}
+          echo "Ref: " ${{ github.ref }}
+          echo "Ref name: " ${{ github.ref_name }}
+      - name: hello
+        shell: python
+        run: |
+          called_ref = "${{ inputs.called-ref }}"
+          print("Hello ${{ inputs.target-ref }} from " + called_ref)
